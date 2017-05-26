@@ -23,21 +23,40 @@ render_eml <- function(file, open = TRUE, outfile = "test.html",
   if (open == TRUE) {
     browseURL(outfile)
   }
+  # make map
+  print("coucou")
+  map_geographical_coverage(eml)
+  print("coucou")
   
   # add custom css
   write_custom_css(publish_mode)
 }
 
 
+#' Write a custom css file
+#' 
+#' The custom.css files make some small changes to the Bootstrap template.
+#' Currently this is written into the root directory of your project.
+#' 
+#' @param publish_mode TRUE. If TRUE the website is pretty without warnings for 
+#'   weird stuff.
+#'   
+#' @return Prints a custom.css file into the root directory.
+#' @export
 write_custom_css <- function(publish_mode){
-  if(publish_mode){
-    custom_css <- 'body { padding-top: 70px; }
-  .table-responsive {
-    max-height:300px;
-  }'
-  }else{
-    custom_css <- 'body { padding-top: 70px; }'
-  }
   
-  writeLines(custom_css, "custom.css")
+  # get the css we always use
+  main_css <- readLines(system.file("template",
+                                    "main_custom.css",
+                                    package = "emldown"))
+  
+  edu_css <- readLines(system.file("template",
+                                   "educational_custom.css",
+                                   package = "emldown"))
+  
+  writeLines(main_css, con = "custom.css")
+  
+  if(publish_mode){
+    cat(edu_css, file= "custom.css", append = TRUE)
+  }
 }
